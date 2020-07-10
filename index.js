@@ -23,8 +23,9 @@ class HtmlWebpackInlineSVGPlugin {
         this.inlineAll = _.get(options, 'inlineAll', false)
         this.allowFromUrl = _.get(options, 'allowFromUrl', false)
         this.userConfig = ''
-        this.outputPath = ''
-
+        this.outputPath = _.get(options, 'outputPath', '');
+        this.publicPath = _.get(options, 'publicPath', '');
+      
         this.files = []
 
     }
@@ -494,8 +495,8 @@ class HtmlWebpackInlineSVGPlugin {
 
         return new Promise((resolve, reject) => {
 
-            const svgSrc = this.getImagesSrc(inlineImage)
-
+            let svgSrc = this.getImagesSrc(inlineImage)
+            svgSrc = svgSrc.replace(this.publicPath,'').replace(/^\//,'./').split('?')[0];
 
             // if the image isn't valid resolve
             if (!svgSrc) return resolve(html)
